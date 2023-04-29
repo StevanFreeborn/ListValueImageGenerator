@@ -42,7 +42,7 @@ export default function App() {
       context.canvas.height
     );
 
-    context.font = `$12px Arial`;
+    context.font = `12px Arial`;
     context.fillStyle = `${textColor}`;
 
     context.textAlign = 'center';
@@ -60,10 +60,7 @@ export default function App() {
       <header></header>
       <main>
         <div>
-          <canvas
-            style={{ width: '100%', height: '100%' }}
-            ref={canvasRef}
-          ></canvas>
+          <canvas ref={canvasRef}></canvas>
         </div>
         <div>
           <div>
