@@ -38,9 +38,9 @@ export default function App() {
     setDownloadLink(downloadLink);
   }, [settings]);
 
-  const handleInputChange = (
+  function handleInputChange(
     e: ChangeEvent<HTMLInputElement>
-  ) => {
+  ) {
     const { name, value } = getInputUpdateValue({
       target: e.target,
     });
@@ -52,7 +52,7 @@ export default function App() {
         value,
       },
     }));
-  };
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -80,7 +80,7 @@ export default function App() {
                     name={settingKey}
                     value={setting.value.toString()}
                     type={setting.inputType}
-                    onChange={e => handleInputChange(e)}
+                    onChange={handleInputChange}
                     {...props}
                   ></input>
                 </div>
