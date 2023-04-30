@@ -12,6 +12,8 @@ export default function App() {
       listValue: 'Hello',
       textColor: '#1489d2',
       fontSize: 12,
+      boldText: false,
+      italicizeText: false,
       backgroundColor: '#002b36',
       opacity: 1,
       height: 25,
@@ -69,7 +71,12 @@ export default function App() {
 
     context.globalAlpha = 1;
 
-    context.font = `${settings.fontSize}px Arial`;
+    context.font = `${
+      settings.italicizeText ? 'italic' : ''
+    } ${settings.boldText ? 'bold' : ''} ${
+      settings.fontSize
+    }px Arial`;
+
     context.fillStyle = `${settings.textColor}`;
 
     context.textAlign = 'center';
@@ -84,10 +91,33 @@ export default function App() {
     setDownloadLink(context.canvas.toDataURL());
   }, [settings]);
 
+  function getUpdateValue({
+    target,
+  }: {
+    target: HTMLInputElement;
+  }): {
+    name: string;
+    value: string | boolean | number;
+  } {
+    const { name, type, value, checked } = target;
+
+    switch (type) {
+      case 'checkbox':
+        return { name, value: checked };
+      case 'number':
+        return { name, value: Number(value) };
+      default:
+        return { name, value };
+    }
+  }
+
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = getUpdateValue({
+      target: e.target,
+    });
+
     setSettings(previous => ({
       ...previous,
       [name]: value,
@@ -111,7 +141,7 @@ export default function App() {
               <input
                 id="listValue"
                 name="listValue"
-                defaultValue={settings.listValue}
+                value={settings.listValue}
                 type="text"
                 onChange={handleInputChange}
                 maxLength={150}
@@ -176,7 +206,7 @@ export default function App() {
               <input
                 id="opacity"
                 name="opacity"
-                defaultValue={settings.opacity}
+                value={settings.opacity}
                 type="number"
                 onChange={handleInputChange}
                 min={0}
@@ -203,11 +233,33 @@ export default function App() {
               <input
                 id="fontSize"
                 name="fontSize"
-                defaultValue={settings.fontSize}
+                value={settings.fontSize}
                 type="number"
                 onChange={handleInputChange}
                 min={1}
                 max={200}
+              ></input>
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="boldText">Bold Text: </label>
+              <input
+                id="boldText"
+                name="boldText"
+                checked={settings.boldText === true}
+                type="checkbox"
+                onChange={handleInputChange}
+              ></input>
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="italicizeText">
+                Italicize Text:{' '}
+              </label>
+              <input
+                id="italicizeText"
+                name="italicizeText"
+                checked={settings.italicizeText === true}
+                type="checkbox"
+                onChange={handleInputChange}
               ></input>
             </div>
             <div className={styles.downloadContainer}>
