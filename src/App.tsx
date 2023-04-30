@@ -12,7 +12,7 @@ export default function App() {
       listValue: 'Hello',
       textColor: '#1489d2',
       fontSize: 12,
-      backgroundColor: '#FF0000',
+      backgroundColor: '#002b36',
       opacity: 1,
       height: 25,
       width: 100,
