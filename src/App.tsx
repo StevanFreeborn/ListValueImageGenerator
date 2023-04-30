@@ -5,6 +5,7 @@ import {
   useState,
 } from 'react';
 import styles from './App.module.css';
+import { getDownloadLink } from './getDownloadLink.ts';
 
 export default function App() {
   const [settings, setSettings] =
@@ -27,68 +28,20 @@ export default function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const context = canvasRef.current?.getContext('2d');
-
-    if (context === null || context === undefined) {
+    if (canvasRef.current === null) {
       return;
     }
 
-    context.clearRect(
-      0,
-      0,
-      context.canvas.width,
-      context.canvas.height
-    );
+    const downloadLink = getDownloadLink({
+      canvas: canvasRef.current,
+      settings: settings,
+    });
 
-    context.canvas.style.width = `${settings.width}px`;
-    context.canvas.style.height = `${settings.height}px`;
-    const scale = window.devicePixelRatio;
+    if (downloadLink === undefined) {
+      return;
+    }
 
-    context.canvas.height = Math.floor(
-      settings.height * scale
-    );
-    context.canvas.width = Math.floor(
-      settings.width * scale
-    );
-
-    context.globalAlpha = settings.opacity;
-
-    context.fillStyle = `${settings.backgroundColor}`;
-    context.strokeStyle = `${settings.backgroundColor}`;
-
-    context.beginPath();
-    context.roundRect(
-      0,
-      0,
-      context.canvas.width,
-      context.canvas.height,
-      settings.borderRadius
-    );
-    context.closePath();
-
-    context.stroke();
-    context.fill();
-
-    context.globalAlpha = 1;
-
-    context.font = `${
-      settings.italicizeText ? 'italic' : ''
-    } ${settings.boldText ? 'bold' : ''} ${
-      settings.fontSize
-    }px Arial`;
-
-    context.fillStyle = `${settings.textColor}`;
-
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-
-    context.fillText(
-      settings.listValue,
-      context.canvas.width / 2,
-      context.canvas.height / 2
-    );
-
-    setDownloadLink(context.canvas.toDataURL());
+    setDownloadLink(downloadLink);
   }, [settings]);
 
   function getUpdateValue({
