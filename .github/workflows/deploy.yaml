@@ -1,5 +1,6 @@
 name: Deploy
-
+permissions:
+  contents: write
 on:
   workflow_dispatch:
   push:
@@ -8,20 +9,17 @@ on:
     branches:
       - main
 jobs:
-  deploy:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup git
+      - name: Install and Build
         run: |
-          git config --global user.email "65925598+StevanFreeborn@users.noreply.github.com"
-          git config --global user.name "Stevan Freeborn"
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-      - name: Install dependencies
-        run: npm install
+          npm install
+          npm run build
       - name: Deploy
-        run: npm run deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
