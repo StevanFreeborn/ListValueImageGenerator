@@ -48,10 +48,12 @@ export default function App() {
     context.canvas.width = Math.floor(
       settings.width * scale
     );
+
     context.globalAlpha = settings.opacity;
 
     context.fillStyle = `${settings.backgroundColor}`;
     context.strokeStyle = `${settings.backgroundColor}`;
+
     context.beginPath();
     context.roundRect(
       0,
@@ -61,6 +63,7 @@ export default function App() {
       settings.borderRadius
     );
     context.closePath();
+
     context.stroke();
     context.fill();
 
