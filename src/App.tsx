@@ -5,22 +5,16 @@ import {
   useState,
 } from 'react';
 import styles from './App.module.css';
-import { getDownloadLink } from './getDownloadLink.ts';
+import { DEFAULT_SETTINGS } from './constants.ts';
+import { GeneratorSettings } from './types';
+import {
+  getDownloadLink,
+  getInputUpdateValue,
+} from './utils.ts';
 
 export default function App() {
   const [settings, setSettings] =
-    useState<GeneratorSettings>({
-      listValue: 'Hello',
-      textColor: '#1489d2',
-      fontSize: 12,
-      boldText: false,
-      italicizeText: false,
-      backgroundColor: '#002b36',
-      opacity: 1,
-      height: 25,
-      width: 100,
-      borderRadius: 5,
-    });
+    useState<GeneratorSettings>(DEFAULT_SETTINGS);
 
   const [downloadLink, setDownloadLink] =
     useState<string>('');
@@ -44,36 +38,19 @@ export default function App() {
     setDownloadLink(downloadLink);
   }, [settings]);
 
-  function getUpdateValue({
-    target,
-  }: {
-    target: HTMLInputElement;
-  }): {
-    name: string;
-    value: string | boolean | number;
-  } {
-    const { name, type, value, checked } = target;
-
-    switch (type) {
-      case 'checkbox':
-        return { name, value: checked };
-      case 'number':
-        return { name, value: Number(value) };
-      default:
-        return { name, value };
-    }
-  }
-
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement>
   ) => {
-    const { name, value } = getUpdateValue({
+    const { name, value } = getInputUpdateValue({
       target: e.target,
     });
 
     setSettings(previous => ({
       ...previous,
-      [name]: value,
+      [name]: {
+        ...previous[name],
+        value,
+      },
     }));
   };
 
@@ -87,134 +64,28 @@ export default function App() {
       <main className={styles.container}>
         <div className={styles.settingsContainer}>
           <div className={styles.settings}>
-            <div className={styles.formGroup}>
-              <label htmlFor="listValue">
-                List Value:{' '}
-              </label>
-              <input
-                id="listValue"
-                name="listValue"
-                value={settings.listValue}
-                type="text"
-                onChange={handleInputChange}
-                maxLength={150}
-              ></input>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="width">
-                Image Height (px):{' '}
-              </label>
-              <input
-                id="height"
-                name="height"
-                value={settings.height}
-                type="number"
-                onChange={handleInputChange}
-                min={1}
-                max={200}
-              ></input>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="width">
-                Image Width (px):{' '}
-              </label>
-              <input
-                id="width"
-                name="width"
-                value={settings.width}
-                type="number"
-                onChange={handleInputChange}
-                min={1}
-                max={200}
-              ></input>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="borderRadius">
-                Border Radius (px):{' '}
-              </label>
-              <input
-                id="borderRadius"
-                name="borderRadius"
-                value={settings.borderRadius}
-                type="number"
-                onChange={handleInputChange}
-                min={1}
-                max={100}
-              ></input>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="backgroundColor">
-                Background Color:{' '}
-              </label>
-              <input
-                id="backgroundColor"
-                name="backgroundColor"
-                value={settings.backgroundColor}
-                type="color"
-                onChange={handleInputChange}
-              ></input>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="opacity">Opacity: </label>
-              <input
-                id="opacity"
-                name="opacity"
-                value={settings.opacity}
-                type="number"
-                onChange={handleInputChange}
-                min={0}
-                max={1}
-                step={0.1}
-              ></input>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="textColor">
-                Text Color:{' '}
-              </label>
-              <input
-                id="textColor"
-                name="textColor"
-                value={settings.textColor}
-                type="color"
-                onChange={handleInputChange}
-              ></input>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="fontSize">
-                Font Size (px):{' '}
-              </label>
-              <input
-                id="fontSize"
-                name="fontSize"
-                value={settings.fontSize}
-                type="number"
-                onChange={handleInputChange}
-                min={1}
-                max={200}
-              ></input>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="boldText">Bold Text: </label>
-              <input
-                id="boldText"
-                name="boldText"
-                checked={settings.boldText === true}
-                type="checkbox"
-                onChange={handleInputChange}
-              ></input>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="italicizeText">
-                Italicize Text:{' '}
-              </label>
-              <input
-                id="italicizeText"
-                name="italicizeText"
-                checked={settings.italicizeText === true}
-                type="checkbox"
-                onChange={handleInputChange}
-              ></input>
-            </div>
+            {Object.keys(settings).map(settingKey => {
+              const setting = settings[settingKey];
+              const props = setting.props();
+              return (
+                <div
+                  key={settingKey}
+                  className={styles.formGroup}
+                >
+                  <label htmlFor={settingKey}>
+                    {setting.labelText}
+                  </label>
+                  <input
+                    id={settingKey}
+                    name={settingKey}
+                    value={setting.value.toString()}
+                    type={setting.inputType}
+                    onChange={e => handleInputChange(e)}
+                    {...props}
+                  ></input>
+                </div>
+              );
+            })}
             <div className={styles.downloadContainer}>
               <a
                 className={styles.downloadButton}
