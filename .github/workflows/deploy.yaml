@@ -13,6 +13,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Setup git
+      - run: |
+          git config --global user.email "65925598+StevanFreeborn@users.noreply.github.com"
+          git config --global user.name "Stevan Freeborn"
       - name: Setup node
         uses: actions/setup-node@v3
         with:
