@@ -1,0 +1,102 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+header,
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.githubLinkContainer>a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  text-decoration: none;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 100%;
+  width: 100%;
+}
+
+.settingsContainer {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.settings {
+  width: 100%;
+  padding: 1rem;
+  max-width: 500px;
+}
+
+.canvasContainer {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+}
+
+.formGroup {
+  padding: 0.25rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.downloadContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0;
+}
+
+.downloadButton {
+  background-color: green;
+  text-decoration: none;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+}
+
+.downloadButton:hover {
+  background-color: rgb(2, 107, 2);
+}
+
+label {
+  margin: 0 0.5rem;
+  font-weight: bold;
+}
+
+input {
+  padding: 0.25rem;
+  font-size: 16px;
+  text-align: center;
+}
+
+@media only screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .formGroup {
+    flex-direction: column;
+  }
+}
