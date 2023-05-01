@@ -35,7 +35,7 @@ export function getDownloadLink({
   context.globalAlpha = settings.opacity.value as number;
 
   context.fillStyle = `${settings.backgroundColor.value}`;
-  context.strokeStyle = `${settings.backgroundColor}`;
+  context.strokeStyle = `${settings.backgroundColor.value}`;
 
   context.beginPath();
   context.roundRect(
